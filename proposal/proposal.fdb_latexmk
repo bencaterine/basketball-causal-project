@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1644008124 "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.tex" "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.pdf" "proposal" 1644008125
-  "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.aux" 1644008125 1242 11845f9fc60b547c2b326980f6b06859 ""
-  "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.tex" 1644007941 6848 b4b93aa10e87a7b06b3dfa81356edf83 ""
+["pdflatex"] 1644528577 "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.tex" "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.pdf" "proposal" 1644528578
+  "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.aux" 1644528578 1242 11845f9fc60b547c2b326980f6b06859 ""
+  "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.tex" 1644528576 9516 addd6b308333ff8784a528889e78b6ca ""
   "/usr/local/texlive/2020/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2020/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2020/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -35,7 +35,6 @@
   "/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb" 1248133631 36118 fad905eba93cff5bce1e185fe980a177 ""
   "/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb" 1248133631 24252 1e4e051947e12dfb50fee0b7f4e26e3a ""
-  "/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/local/texlive/2020/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2020/texmf-dist/tex/generic/atbegshi/atbegshi.sty" 1575674566 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
   "/usr/local/texlive/2020/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty" 1576625341 40635 c40361e206be584d448876bba8a64a3b ""
@@ -187,13 +186,13 @@
   "/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1586288239 4811913 0be9a7e86c70a26e5e3042966bcd7097 ""
   "/usr/local/texlive/2020/texmf-var/web2c/pdftex/pdflatex.fmt" 1586288259 2432462 fd0fa20e9a3cb5f8169fd0ba1c955158 ""
   "/usr/local/texlive/2020/texmf.cnf" 1586288231 577 d60164b4589a341208aff7a667fbbdcb ""
-  "proposal.aux" 1644008125 1242 11845f9fc60b547c2b326980f6b06859 "pdflatex"
-  "proposal.out" 1644008125 272 792b05d11bf33a3ae99c499ee57c03ce "pdflatex"
-  "proposal.tex" 1644007941 6848 b4b93aa10e87a7b06b3dfa81356edf83 ""
+  "proposal.aux" 1644528578 1242 11845f9fc60b547c2b326980f6b06859 "pdflatex"
+  "proposal.out" 1644528578 272 792b05d11bf33a3ae99c499ee57c03ce "pdflatex"
+  "proposal.tex" 1644528576 9516 addd6b308333ff8784a528889e78b6ca ""
   (generated)
   "proposal.aux"
+  "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.pdf"
   "proposal.out"
-  "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.pdf"
-  "proposal.log"
-  "/Users/bencaterine/Desktop/cs396-modeling/project/proposal/proposal.log"
+  "/Users/bencaterine/Desktop/cs396-causal/project/proposal/proposal.log"
   "proposal.pdf"
+  "proposal.log"
