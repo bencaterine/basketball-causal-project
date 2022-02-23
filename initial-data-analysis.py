@@ -17,6 +17,7 @@ stats_cols = {
 
 # college stats data
 college_df = pd.read_csv(college_stats)
+college_df.drop_duplicates('player_name', keep='last', inplace=True)
 print(college_df)
 print(college_df.info())
 
@@ -40,3 +41,10 @@ to_float = combine_df.columns.difference(['YEAR', 'PLAYER', 'POS'])
 combine_df[to_float] = combine_df[to_float].astype(float)
 # drop rows with no data (keep rows with some data)
 combine_df.dropna(thresh=4, inplace=True)
+combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
+print(combine_df)
+print(combine_df.info())
+
+df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
+print(df.info())
+print(df)
