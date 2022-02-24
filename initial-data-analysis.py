@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import os
+import estimator
+
 
 dir = os.path.dirname(__file__)
 college_stats = os.path.join(dir, 'archive/stats09-21.csv')
@@ -18,12 +20,12 @@ stats_cols = {
 # college stats data
 college_df = pd.read_csv(college_stats)
 college_df.drop_duplicates('player_name', keep='last', inplace=True)
-print(college_df)
-print(college_df.info())
+# print(college_df)
+# print(college_df.info())
 
-for stat in stats_cols.keys():
-    print(stat, 'mean:', college_df[stats_cols[stat]].mean())
-    print(stat, 'std:', college_df[stats_cols[stat]].std())
+# for stat in stats_cols.keys():
+#     print(stat, 'mean:', college_df[stats_cols[stat]].mean())
+#     print(stat, 'std:', college_df[stats_cols[stat]].std())
 
 # combine data
 combine_df = pd.read_csv(combine_stats)
@@ -42,9 +44,19 @@ combine_df[to_float] = combine_df[to_float].astype(float)
 # drop rows with no data (keep rows with some data)
 combine_df.dropna(thresh=4, inplace=True)
 combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
-print(combine_df)
-print(combine_df.info())
+# print(combine_df)
+# print(combine_df.info())
 
 df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
-print(df.info())
-print(df)
+df['drafted'] = ~df['pick'].isnull()*1
+df.rename({'STANDING_VERTICAL_LEAP_(INCHES)': 'vert', 'HEIGHT_W/O_SHOES': 'height', 'WEIGHT_(LBS)': 'weight'}, axis=1, inplace=True)
+specific_df = df[['vert', 'drafted', 'height', 'weight', 'pts', 'treb', 'ast']]
+specific_df.dropna(inplace=True)
+print(specific_df)
+# print(df.info())
+# print(df['pick'])
+# print(df['drafted'])
+
+# est = estimator.bootstrap(specific_df, function=estimator.backdoor, intervention='vert', outcome='drafted', confounders=['height', 'weight', 'pts', 'treb', 'ast'])
+est = estimator.bootstrap(specific_df, function=estimator.backdoor, n=10, intervention='vert', outcome='drafted', confounders=['height', 'pts'])
+print(est)
