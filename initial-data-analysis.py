@@ -49,14 +49,22 @@ combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
 
 df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
 df['drafted'] = ~df['pick'].isnull()*1
-df.rename({'STANDING_VERTICAL_LEAP_(INCHES)': 'vert', 'HEIGHT_W/O_SHOES': 'height', 'WEIGHT_(LBS)': 'weight'}, axis=1, inplace=True)
-specific_df = df[['vert', 'drafted', 'height', 'weight', 'pts', 'treb', 'ast']]
+df.rename({
+    'STANDING_VERTICAL_LEAP_(INCHES)': 'vert',
+    'MAX_VERTICAL_LEAP_(INCHES)': 'mvert',
+    'HEIGHT_W/O_SHOES': 'height',
+    'WEIGHT_(LBS)': 'weight'
+}, axis=1, inplace=True)
+specific_df = df[['vert', 'mvert', 'drafted', 'height', 'weight', 'pts', 'treb', 'ast']]
 specific_df.dropna(inplace=True)
 print(specific_df)
-# print(df.info())
-# print(df['pick'])
-# print(df['drafted'])
 
-# est = estimator.bootstrap(specific_df, function=estimator.backdoor, intervention='vert', outcome='drafted', confounders=['height', 'weight', 'pts', 'treb', 'ast'])
-est = estimator.bootstrap(specific_df, function=estimator.backdoor, n=10, intervention='vert', outcome='drafted', confounders=['height', 'pts'])
+est = estimator.bootstrap(specific_df, function=estimator.backdoor, n=3, intervention=['vert', 'mvert'], outcome='drafted', confounders=['height', 'pts'])
 print(est)
+
+# TODO:
+# - interpret CI matrix
+# - discretize/invert combine data to fit the model
+# - decide which C and M values to use
+# - figure out what n is feasible based on number of C/Ms
+# - nonbinary drafted outcome?
