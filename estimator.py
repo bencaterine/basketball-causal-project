@@ -47,7 +47,6 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
         new_df = df.sample(frac=1, replace=True)
         results.append(function(new_df, intervention, a1_vals, a2_vals, **kwargs))
     results = np.array(results)
-    print(results)
     diff = (100-ci)/2
     done = np.percentile(results, [diff, 100-diff], axis=0)
     return done
@@ -70,7 +69,7 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
     expression = outcome+'~'+'+'.join(confounders)
     # a3_vals = np.unique(df[intervention[2]])
     # a4_vals = np.unique(df[intervention[3]])
-    mean_df = df.mean()
+    mean_df = df.mean(numeric_only=True)
     big_results = [0] * len(a1_vals)
     for i, a1_val in enumerate(a1_vals):
         data = df[df[intervention[0]]==a1_val]

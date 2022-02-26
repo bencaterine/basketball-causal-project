@@ -44,22 +44,44 @@ combine_df[to_float] = combine_df[to_float].astype(float)
 # drop rows with no data (keep rows with some data)
 combine_df.dropna(thresh=4, inplace=True)
 combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
-# print(combine_df)
-# print(combine_df.info())
-
+# merge college and combine data
 df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
+
+# transform data
+df.rename(
+    {
+        'BODY_FAT_%': 'fat',
+        'HAND_LENGTH_(INCHES)': 'hand_length',
+        'HAND_WIDTH_(INCHES)': 'hand_width',
+        'HEIGHT_W/O_SHOES': 'height',
+        'STANDING_REACH': 'reach',
+        'WEIGHT_(LBS)': 'weight',
+        'LANE_AGILITY_TIME_(SECONDS)': 'lane',
+        'THREE_QUARTER_SPRINT_(SECONDS)': 'sprint',
+        'STANDING_VERTICAL_LEAP_(INCHES)': 'vert',
+        'MAX_VERTICAL_LEAP_(INCHES)': 'mvert'
+    },
+    axis=1,
+    inplace=True
+)
 df['drafted'] = ~df['pick'].isnull()*1
-df.rename({
-    'STANDING_VERTICAL_LEAP_(INCHES)': 'vert',
-    'MAX_VERTICAL_LEAP_(INCHES)': 'mvert',
-    'HEIGHT_W/O_SHOES': 'height',
-    'WEIGHT_(LBS)': 'weight'
-}, axis=1, inplace=True)
-specific_df = df[['vert', 'mvert', 'drafted', 'height', 'weight', 'pts', 'treb', 'ast']]
+df['lane'] = pd.cut(df['lane'], 10)
+df['sprint'] = pd.cut(df['sprint'], 10)
+df['vert'] = pd.cut(df['vert'], 10)
+df['mvert'] = pd.cut(df['mvert'], 10)
+print(df['vert'])
+specific_df = df[['lane', 'sprint', 'vert', 'mvert', 'drafted', 'hand_length', 'hand_width', 'height', 'reach', 'weight', 'pts', 'treb', 'ast']]
 specific_df.dropna(inplace=True)
 print(specific_df)
 
-est = estimator.bootstrap(specific_df, function=estimator.backdoor, n=3, intervention=['vert', 'mvert'], outcome='drafted', confounders=['height', 'pts'])
+est = estimator.bootstrap(
+    specific_df,
+    function=estimator.backdoor,
+    n=100,
+    intervention=['vert', 'mvert'],
+    outcome='drafted',
+    confounders=['hand_length', 'hand_width', 'height', 'reach', 'weight', 'pts', 'treb', 'ast']
+)
 print(est)
 
 # TODO:
