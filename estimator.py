@@ -2,6 +2,7 @@ import numpy as np
 import statsmodels.formula.api as smf
 import pandas as pd
 import statsmodels.api as sm
+from sklearn.linear_model import LogisticRegression
 
 
 def naive(df):
@@ -44,9 +45,14 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
     results = []
     a1_vals = np.unique(df[intervention[0]])
     a2_vals = np.unique(df[intervention[1]])
-    for _ in range(n):
+    # for _ in range(n):
+    while len(results) < n:
         new_df = df.sample(frac=1, replace=True)
-        results.append(function(new_df, intervention, a1_vals, a2_vals, **kwargs))
+        # results.append(function(new_df, intervention, a1_vals, a2_vals, **kwargs))
+        result = function(new_df, intervention, a1_vals, a2_vals, **kwargs)
+        # check if result is None, which means we couldn't fit all models
+        if result is not None:
+            results.append(result)
     results = np.array(results)
     diff = (100-ci)/2
     done = np.percentile(results, [diff, 100-diff], axis=0)
@@ -68,7 +74,7 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
         results: an array of E[Y^a] estimates
     """
     expression = outcome+'~'+'+'.join(confounders)
-    mean_df = df.mean(numeric_only=True)
+    # mean_df = df.mean(numeric_only=True)
     big_results = [0] * len(a1_vals)
     for i, a1_val in enumerate(a1_vals):
         data = df[df[intervention[0]]==a1_val]
@@ -77,9 +83,18 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
             data2 = data[data[intervention[1]]==a2_val]
             if data2.empty:
                 continue
+
+            # Give up if this LogisticRegression will have only label in drafted
+            if np.unique(data2["drafted"]).shape[0] == 1:
+                return
+
+            model = LogisticRegression(max_iter=1000)
+            model.fit(data2[confounders], data2[outcome])
+            results[j] = np.mean(model.predict(df[confounders]))
+
             #params = smf.ols(expression, data=data2).fit().params
-            params = smf.glm(formula=expression, data=data2, family=sm.families.Binomial()).fit().params
-            results[j] = params['Intercept'] + sum([params[conf] * mean_df[conf] for conf in confounders])
+            # params = smf.glm(formula=expression, data=data2, family=sm.families.Binomial()).fit().params
+            # results[j] = params['Intercept'] + sum([params[conf] * mean_df[conf] for conf in confounders])
         big_results[i] = results
     return np.array(big_results)
 
