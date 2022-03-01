@@ -1,6 +1,7 @@
 import numpy as np
 import statsmodels.formula.api as smf
 import pandas as pd
+import statsmodels.api as sm
 
 
 def naive(df):
@@ -67,8 +68,6 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
         results: an array of E[Y^a] estimates
     """
     expression = outcome+'~'+'+'.join(confounders)
-    # a3_vals = np.unique(df[intervention[2]])
-    # a4_vals = np.unique(df[intervention[3]])
     mean_df = df.mean(numeric_only=True)
     big_results = [0] * len(a1_vals)
     for i, a1_val in enumerate(a1_vals):
@@ -78,19 +77,10 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
             data2 = data[data[intervention[1]]==a2_val]
             if data2.empty:
                 continue
-            params = smf.ols(expression, data=data2).fit().params
+            #params = smf.ols(expression, data=data2).fit().params
+            params = smf.glm(formula=expression, data=data2, family=sm.families.Binomial()).fit().params
             results[j] = params['Intercept'] + sum([params[conf] * mean_df[conf] for conf in confounders])
         big_results[i] = results
-            # for a3_val in a3_vals:
-            #     data = data[data[intervention[2]]==a3_val]
-            #     if data.empty:
-            #         continue
-            #     for a4_val in a4_vals:
-            #         data = data[data[intervention[3]]==a4_val]
-            #         if data.empty:
-            #             continue
-            #         params = smf.ols(expression, data=data).fit().params
-            #         results.append(params['Intercept'] + sum([params[conf] * mean_df[conf] for conf in confounders]))
     return np.array(big_results)
 
 
