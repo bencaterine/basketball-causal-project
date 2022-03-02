@@ -5,29 +5,6 @@ import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression
 
 
-def naive(df):
-    """
-    Naive estimator that assumes E[Y^a] = E[Y | A]
-    Should work when A is randomized
-    """
-    results = []
-    for i in sorted(np.unique(df["a"])):
-        est = np.mean(df[df["a"] == i]["y"])
-        results.append(est)
-    return np.array(results)
-
-
-def naive_linear(df):
-    """
-    A naive linear estimator for E[Y^a]
-    Assumes E[Y^a] = E[Y | A]
-    Should work when A is randomized and A->Y is linear
-    """
-    params = smf.ols("y~a", data=df).fit().params.to_numpy()
-    n_a = np.unique(df["a"]).shape[0]
-    return np.stack([np.ones(n_a), np.arange(n_a)], axis=1).dot(params)
-
-
 def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **kwargs):
     """
     Resample the dataframe `n` times. For each resampled dataframe,
@@ -48,7 +25,6 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
     # for _ in range(n):
     while len(results) < n:
         new_df = df.sample(frac=1, replace=True)
-        # results.append(function(new_df, intervention, a1_vals, a2_vals, **kwargs))
         result = function(new_df, intervention, a1_vals, a2_vals, **kwargs)
         # check if result is None, which means we couldn't fit all models
         if result is not None:
@@ -73,8 +49,6 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
     Returns
         results: an array of E[Y^a] estimates
     """
-    expression = outcome+'~'+'+'.join(confounders)
-    # mean_df = df.mean(numeric_only=True)
     big_results = [0] * len(a1_vals)
     for i, a1_val in enumerate(a1_vals):
         data = df[df[intervention[0]]==a1_val]
@@ -91,58 +65,6 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
             model = LogisticRegression(max_iter=1000)
             model.fit(data2[confounders], data2[outcome])
             results[j] = np.mean(model.predict(df[confounders]))
-
-            #params = smf.ols(expression, data=data2).fit().params
-            # params = smf.glm(formula=expression, data=data2, family=sm.families.Binomial()).fit().params
-            # results[j] = params['Intercept'] + sum([params[conf] * mean_df[conf] for conf in confounders])
+ 
         big_results[i] = results
     return np.array(big_results)
-
-
-def ipw(df, confounders=["c", "d"]):
-    """
-    An inverse probability weighting estimator for E[Y^a]
-    You may want to use smf.mnlogit to train a propensity model p(A | confounders)
-
-    Arguments
-      df: a data frame for which to estimate the causal effect
-      confounders: the variables to treat as confounders.
-          For the data we consider, if you include both c and d as confounders,
-          this estimator should be unbiased. If you only include one,
-          you would expect to see more bias.
-
-    Returns
-        results: an array of E[Y^a] estimates
-    """
-    model = smf.mnlogit('a~'+'+'.join(confounders), data=df).fit()
-    a_vals = np.unique(df['a'])
-    predictions = model.predict(df[confounders])
-    frames = [df, predictions]
-    df = pd.concat(frames, axis=1)
-    df['pred'] = 0
-    df.index = range(df.shape[0])
-    for a_val in a_vals:
-        df.loc[df['a']==a_val, 'pred'] = df[a_val]
-    df['partial'] = 1/df.shape[0] * df['y'] * 1/df['pred']
-    df = df.drop([a_val for a_val in a_vals], axis=1)
-    results = df.groupby(['a']).sum()['partial'].values
-    return np.array(results)
-
-
-def frontdoor(df):
-    """
-    A front-door estimator for E[Y^a]
-    Should only use a, m, and y -- not c or d.
-    You may want to use smf.ols to model E[Y | M, A]
-
-    Arguments
-      df: a data frame for which to estimate the causal effect
-
-    Returns
-        results: an array of E[Y^a] estimates
-    
-    """
-    results = []
-    raise NotImplementedError
-
-    return np.array(results)
