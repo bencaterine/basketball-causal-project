@@ -124,4 +124,4 @@ for p in [0,1,2]:
     axs[p].xaxis.set_label_position('top')
     axs[p].set_ylabel('Standing Vertical Leap (in)')
 plt.tight_layout()
-plt.savefig('ci_matrices.png', dpi=500)
+plt.savefig('ci_matrices_new.png', dpi=500)
