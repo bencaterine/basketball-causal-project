@@ -1,14 +1,9 @@
 import pandas as pd
 import numpy as np
-import os
 import estimator
 import matplotlib.pyplot as plt
 
 N_bins = 4
-
-dir = os.path.dirname(__file__)
-college_stats = os.path.join(dir, 'archive/stats09-21.csv')
-combine_stats = os.path.join(dir, 'archive/nba_combine.csv')
 
 stats_cols = {
     'points': 'pts',
@@ -20,7 +15,7 @@ stats_cols = {
 }
 
 # college stats data
-college_df = pd.read_csv(college_stats)
+college_df = pd.read_csv('archive/stats09-21.csv')
 college_df.drop_duplicates('player_name', keep='last', inplace=True)
 # print(college_df)
 # print(college_df.info())
@@ -30,7 +25,7 @@ college_df.drop_duplicates('player_name', keep='last', inplace=True)
 #     print(stat, 'std:', college_df[stats_cols[stat]].std())
 
 # combine data
-combine_df = pd.read_csv(combine_stats)
+combine_df = pd.read_csv('archive/nba_combine.csv')
 
 # clean combine data
 # convert strings
@@ -96,7 +91,7 @@ specific_df = specific_df.dropna()
 print(specific_df)
 
 # perform backdoor using bootstrap to get CIs
-est = estimator.bootstrap(
+est, mean = estimator.bootstrap(
     specific_df,
     function=estimator.backdoor,
     n=100,
@@ -110,11 +105,12 @@ i0_ticks = [np.around(np.unique(specific_df[intervention[0]])[k].left, decimals=
 i0_ticks.append(np.around(np.unique(specific_df[intervention[0]])[3].right, decimals=3))
 i1_ticks = [np.around(np.unique(specific_df[intervention[1]])[k].left, decimals=3) for k in [0,1,2,3]]
 i1_ticks.append(np.around(np.unique(specific_df[intervention[1]])[3].right, decimals=3))
-rounded = np.around(est, decimals=3)
-fig, axs = plt.subplots(2)
-fig.set_size_inches(6, 6)
-titles = ['Lower CI', 'Upper CI']
-for p in [0,1]:
+rounded = np.append(np.around(est, decimals=3), [np.around(mean, decimals=3)], axis=0)
+print(rounded)
+fig, axs = plt.subplots(1,3)
+fig.set_size_inches(11, 3)
+titles = ['Lower CI', 'Upper CI', 'Mean']
+for p in [0,1,2]:
     caxes = axs[p].matshow(rounded[p], interpolation='nearest')
     fig.colorbar(caxes, ax=axs[p])
     for i in range(N_bins):

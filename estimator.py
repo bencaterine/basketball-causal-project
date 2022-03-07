@@ -32,7 +32,8 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
     results = np.array(results)
     diff = (100-ci)/2
     done = np.percentile(results, [diff, 100-diff], axis=0)
-    return done
+    mean = np.percentile(results, 50, axis=0)
+    return done, mean
 
 def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], outcome="y", confounders=["c", "d"]):
     """
