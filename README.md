@@ -1,4 +1,4 @@
-CS 396-4 Causal Inference Final Project
+**CS 396-4 Causal Inference Final Project**
 Ben Caterine and Michael Diersen
 
 Run these files in order to reproduce our results:
