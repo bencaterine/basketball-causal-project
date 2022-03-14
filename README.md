@@ -2,15 +2,15 @@
 Ben Caterine and Michael Diersen
 
 Run these files in order to reproduce our results:
-1. initial-data-analysis.py
+1. **initial-data-analysis.py**
     This merges the college basketball player data and NBA Combine player data
     into one dataset. It also performs data cleaning to unify datatypes and
     simplify column names.
-2. generate_mice_data.py
+2. **generate_mice_data.py**
     This uses MICE to impute missing data in our dataset, such as missing
     values in the 'standing vertical' column and the entire 'bench press'
     column.
-3. main.py
+3. **main.py**
     This runs the actual estimator on our dataset. Specifically, it uses
     different 'drafted' outcomes (binary, by round, by pick, etc.) to produce
     differing results, and it also tests what happens if we run the estimator
