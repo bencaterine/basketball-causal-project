@@ -2,7 +2,7 @@
 Ben Caterine and Michael Diersen
 
 Run these files in order to reproduce our results:
-1. **initial-data-analysis.py**
+1. **initial-data-analysis.py**<br/>
     This merges the college basketball player data and NBA Combine player data
     into one dataset. It also performs data cleaning to unify datatypes and
     simplify column names.
