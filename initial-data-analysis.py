@@ -43,6 +43,7 @@ combine_df.dropna(thresh=4, inplace=True)
 combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
 # merge college and combine data
 df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
+df.to_csv('archive/college_and_combine.csv')
 
 # transform data
 df.rename(
@@ -83,6 +84,10 @@ college_stats_to_use = [
     'porpag', 'adjoe', 'atr', 'drtg', 'adrtg', 'dporpag', 'stops', 'bpm', 'obpm', 'dbpm',
     'gbpm', 'oreb', 'dreb', 'treb', 'ast', 'stl', 'blk', 'pts'
 ]
+# college_stats_to_use = [
+#     'Min_per', 'eFG', 'TO_per', 'FT_per',
+#     'treb', 'ast', 'stl', 'blk', 'pts'
+# ] this is saved in ci_matrices_new
 intervention = ['lane', 'vert'] # ['run_avg', 'vert_avg']
 
 # narrow the df before dropping null values
@@ -94,7 +99,7 @@ print(specific_df)
 est, mean = estimator.bootstrap(
     specific_df,
     function=estimator.backdoor,
-    n=100,
+    n=1,
     intervention=intervention,
     outcome='drafted',
     confounders = combine_stats_to_use + college_stats_to_use
@@ -124,4 +129,4 @@ for p in [0,1,2]:
     axs[p].xaxis.set_label_position('top')
     axs[p].set_ylabel('Standing Vertical Leap (in)')
 plt.tight_layout()
-plt.savefig('ci_matrices_new.png', dpi=500)
+plt.savefig('ci_matrices_new2.png', dpi=500)
