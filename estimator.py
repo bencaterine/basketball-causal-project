@@ -1,9 +1,13 @@
 import numpy as np
-import statsmodels.formula.api as smf
-import pandas as pd
-import statsmodels.api as sm
+# import statsmodels.formula.api as smf
+# import pandas as pd
+# import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression
 
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 
 def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **kwargs):
     """
