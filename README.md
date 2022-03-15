@@ -1,4 +1,4 @@
-**CS 396-4 Causal Inference Final Project**
+**CS 396-4 Causal Inference Final Project**<br/>
 Ben Caterine and Michael Diersen
 
 Run main.py to reproduce our results; this file will run the following files in
