@@ -1,7 +1,4 @@
 import numpy as np
-# import statsmodels.formula.api as smf
-# import pandas as pd
-# import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression
 
 def warn(*args, **kwargs):
@@ -26,8 +23,8 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
     results = []
     a1_vals = np.unique(df[intervention[0]])
     a2_vals = np.unique(df[intervention[1]])
-    # for _ in range(n):
     while len(results) < n:
+        
         new_df = df.sample(frac=1, replace=True)
         result = function(new_df, intervention, a1_vals, a2_vals, **kwargs)
         # check if result is None, which means we couldn't fit all models

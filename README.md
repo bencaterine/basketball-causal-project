@@ -1,8 +1,9 @@
 **CS 396-4 Causal Inference Final Project**
 Ben Caterine and Michael Diersen
 
-Run these files in order to reproduce our results:
-1. **initial-data-analysis.py**<br/>
+Run main.py to reproduce our results; this file will run the following files in
+order:
+1. **initial_data_analysis.py**<br/>
     This merges the college basketball player data and NBA Combine player data
     into one dataset. It also performs data cleaning to unify datatypes and
     simplify column names.

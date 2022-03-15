@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 
+print('Started data management and cleaning...')
+
 # college stats data
 college_df = pd.read_csv('archive/stats09-21.csv')
+# keep only the year prior to a player being drafted (their last year)
 college_df.drop_duplicates('player_name', keep='last', inplace=True)
 
 # combine data
 combine_df = pd.read_csv('archive/nba_combine.csv')
 
-# clean combine data
+# clean combine data:
 # convert strings
 combine_df['BODY_FAT_%'] = combine_df['BODY_FAT_%'].str.slice(stop=-1)
 combine_df.replace('-', np.nan, inplace=True)
@@ -22,11 +25,12 @@ combine_df[to_float] = combine_df[to_float].astype(float)
 # drop rows with no data (keep rows with some data)
 combine_df.dropna(thresh=4, inplace=True)
 combine_df.drop_duplicates('PLAYER', keep='last', inplace=True)
+# drop players with missing weights (essential for MICE)
 combine_df.dropna(subset='WEIGHT_(LBS)', inplace=True)
 # merge college and combine data
 df = combine_df.merge(right=college_df, left_on='PLAYER', right_on='player_name')
 
-# transform data
+# simplify column names
 df.rename(
     {
         'BODY_FAT_%': 'fat',
@@ -46,4 +50,7 @@ df.rename(
     inplace=True
 )
 
+# save combined dataframe to csv file
 df.to_csv('archive/college_and_combine.csv')
+
+print('Finished data management and cleaning.')
