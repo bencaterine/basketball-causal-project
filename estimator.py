@@ -24,7 +24,7 @@ def bootstrap(df, function, n=1000, ci=95, intervention=['a', 'b', 'c', 'd'], **
     a1_vals = np.unique(df[intervention[0]])
     a2_vals = np.unique(df[intervention[1]])
     while len(results) < n:
-        
+
         new_df = df.sample(frac=1, replace=True)
         result = function(new_df, intervention, a1_vals, a2_vals, **kwargs)
         # check if result is None, which means we couldn't fit all models
@@ -64,7 +64,7 @@ def backdoor(df, intervention=["a1", "a2", "a3", "a4"], a1_vals=[], a2_vals=[], 
             if np.unique(data2["drafted"]).shape[0] == 1:
                 return
 
-            model = LogisticRegression(max_iter=1000)
+            model = LogisticRegression(max_iter=1000) # Q2.3
             model.fit(data2[confounders], data2[outcome])
             results[j] = np.mean(model.predict(df[confounders]))
  

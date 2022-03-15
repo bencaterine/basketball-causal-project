@@ -55,7 +55,7 @@ def estimate_and_graph(
     specific_df = specific_df.dropna()
     print(specific_df)
 
-    # Q2.3 perform backdoor using bootstrap to get CIs
+    # perform backdoor using bootstrap to get CIs
     est, mean = estimator.bootstrap(
         specific_df,
         function=estimator.backdoor,
